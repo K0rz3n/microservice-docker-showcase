@@ -8,6 +8,14 @@ This project shows how to implement a microservice-like architecture using docke
 
 
 
+## Architecture
+
+**Implemented the core part of the below architecture**
+
+![Architecture](./images/architecture.png)
+
+
+
 ## Feature
 
 1. The project has Loadbalance mounted on the front end, and can be observed through the actual access API Gateway instance name.
@@ -53,6 +61,7 @@ Project start
 Gateway request
 
 ![Gateway request 1](./images/gateway_request1.png)
+
 ![Gateway request 2](./images/gateway_request2.png)
 
 Service request
