@@ -1,0 +1,6 @@
+{
+    "name":"FileStorageService",
+    "service_name":"file_storage_service",
+    "port":"8002",
+    "address":"0.0.0.0"
+}

@@ -1,0 +1,6 @@
+{
+    "name":"RatingService",
+    "service_name":"rating_service",
+    "port":"8004",
+    "address":"0.0.0.0"
+}

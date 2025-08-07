@@ -1,0 +1,6 @@
+{
+    "name":"ContentManagementService",
+    "service_name":"content_management_service",
+    "port":"8001",
+    "address":"0.0.0.0"
+}

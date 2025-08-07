@@ -1,0 +1,6 @@
+{
+    "name":"PaymentService",
+    "service_name":"payment_service",
+    "port":"8003",
+    "address":"0.0.0.0"
+}

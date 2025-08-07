@@ -1,0 +1,6 @@
+{
+    "name":"UserManagmentService",
+    "service_name":"user_managment_service",
+    "port":"8006",
+    "address":"0.0.0.0"
+}

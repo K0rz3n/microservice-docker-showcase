@@ -1,0 +1,21 @@
+{
+  "name": "microservice-showcase",
+  "version": "1.0.0",
+  "description": "This project shows how to implement a microservice-like architecture using docker compose.Through the output of the console, you can clearly see the entire calling process from the outside to the inside",
+  "private": true,
+  "workspaces": [
+    "api_gateway",
+    "authorization",
+    "http_server_basic",
+    "http_server_upstream"
+  ],
+  "scripts": {
+    "bootstrap": "npm install",
+    "dev": "docker compose up --build",
+    "clean": "rimraf node_modules */node_modules package-lock.json */package-lock.json"
+  },
+  "keywords": [],
+  "author": "k0rz3n",
+  "license": "ISC",
+  "type": "commonjs"
+}

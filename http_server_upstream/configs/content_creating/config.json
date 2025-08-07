@@ -1,0 +1,20 @@
+
+{
+    "name":"ContentCreatingService",
+    "service_name":"content_creating_service",
+    "port":"8802",
+    "address":"0.0.0.0",
+    "target": [
+        {
+            "name":"RefoundService",
+            "port":"8805",
+            "address":"refound_service"
+        },
+        {
+            "name":"FileStorageService",
+            "port":"8002",
+            "address":"file_storage_service"
+        }
+    ]
+}
+

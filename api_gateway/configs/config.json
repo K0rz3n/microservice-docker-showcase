@@ -1,0 +1,36 @@
+
+{
+    "name":"ApiGatewayService",
+    "service_name":"api_gateway_service",
+    "port":"8080",
+    "address":"0.0.0.0",
+    "registrants":[
+        {
+            "api_name":"ContentDeliveryService",
+            "api_address":"content_delivery_service",
+            "api_port":"8803",
+            "api_path":"ContentDeliveryService"
+        },
+        {
+            "api_name":"ContentCreatingService",
+            "api_address":"content_creating_service",
+            "api_port":"8802",
+            "api_path":"ContentCreatingService"
+        },
+        {
+            "api_name":"AdministrationService",
+            "api_address":"administration_service",
+            "api_port":"8801",
+            "api_path":"AdministrationService"
+        }
+    ],
+    "dependencies":
+    [
+        {
+            "name":"AuthorizationService",
+            "port":"9000",
+            "address":"authorization_service",
+            "path":"auth"
+        }
+    ]
+}

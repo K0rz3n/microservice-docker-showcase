@@ -1,0 +1,226 @@
+---
+services:
+  analytics_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/analytics/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network  # use specific network
+
+  recommendation_service:
+    build:
+      context: ./http_server_upstream
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_upstream/configs/recommendation/config.json:/usr/src/app/config.json  
+    depends_on:
+      - analytics_service  
+    networks:
+      - my_bridge_network 
+
+  payment_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/payment/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  user_managment_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/user_managment/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  subscription_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/subscription/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  rating_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/rating/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  content_management_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/content_management/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  content_delivery_service:
+    build:
+      context: ./http_server_upstream
+      dockerfile: Dockerfile 
+    volumes:
+      - ./http_server_upstream/configs/content_delivery/config.json:/usr/src/app/config.json  
+    depends_on:
+      - content_management_service  
+      - recommendation_service
+      - payment_service
+      - user_managment_service
+      - subscription_service
+      - rating_service
+    networks:
+      - my_bridge_network
+
+  refound_service:
+    build:
+      context: ./http_server_upstream
+      dockerfile: Dockerfile 
+    volumes:
+      - ./http_server_upstream/configs/refund/config.json:/usr/src/app/config.json  
+    depends_on:
+      - rating_service  
+      - content_management_service
+      - payment_service
+    networks:
+      - my_bridge_network
+  
+  file_storage_service:
+    build:
+      context: ./http_server_basic
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_basic/configs/file_storage/config.json:/usr/src/app/config.json  
+    networks:
+      - my_bridge_network
+
+  content_creating_service:
+    build:
+      context: ./http_server_upstream
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_upstream/configs/content_creating/config.json:/usr/src/app/config.json  
+    depends_on:
+      - refound_service 
+      - file_storage_service
+    networks:
+      - my_bridge_network
+
+  administration_service:
+    build:
+      context: ./http_server_upstream
+      dockerfile: Dockerfile
+    volumes:
+      - ./http_server_upstream/configs/administration/config.json:/usr/src/app/config.json
+    depends_on:
+      - refound_service  
+      - file_storage_service
+      - content_management_service
+      - user_managment_service
+    networks:
+      - my_bridge_network
+
+# ========= Load Balance 实例  =========
+  traefik:
+    image: traefik:v2.11
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false   # 只代理打了 enable=true 的容器
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - my_bridge_network
+  
+# ========= API Gateway 实例 1 =========
+  api_gateway_service_1:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    environment:
+      - INSTANCE_TAG=api_gateway_service_1
+    volumes:
+      - ./api_gateway/configs/config.json:/usr/src/app/config.json:ro
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.apigw.rule=PathPrefix(`/api`)"
+      - traefik.http.routers.apigw.entrypoints=web
+      - traefik.http.services.apigw.loadbalancer.server.port=8080
+      - traefik.docker.network=my_bridge_network
+    depends_on:
+      - content_delivery_service
+      - content_creating_service
+      - administration_service
+    networks:
+      - my_bridge_network
+
+  # ========= API Gateway 实例 2 =========
+  api_gateway_service_2:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    environment:
+      - INSTANCE_TAG=api_gateway_service_2
+    volumes:
+      - ./api_gateway/configs/config.json:/usr/src/app/config.json:ro
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.apigw.rule=PathPrefix(`/api`)"
+      - traefik.http.routers.apigw.entrypoints=web
+      - traefik.http.services.apigw.loadbalancer.server.port=8080
+      - traefik.docker.network=my_bridge_network
+    depends_on:
+      - content_delivery_service
+      - content_creating_service
+      - administration_service
+    networks:
+      - my_bridge_network
+
+  # ========= API Gateway 实例 3 =========
+  api_gateway_service_3:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    environment:
+      - INSTANCE_TAG=api_gateway_service_3
+    volumes:
+      - ./api_gateway/configs/config.json:/usr/src/app/config.json:ro
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.apigw.rule=PathPrefix(`/api`)"
+      - traefik.http.routers.apigw.entrypoints=web
+      - traefik.http.services.apigw.loadbalancer.server.port=8080
+      - traefik.docker.network=my_bridge_network
+    depends_on:
+      - content_delivery_service
+      - content_creating_service
+      - administration_service
+    networks:
+      - my_bridge_network
+  authorization_service:
+    build:
+      context: ./authorization
+      dockerfile: Dockerfile
+    volumes:
+      - ./authorization/configs/config.json:/usr/src/app/config.json  
+    depends_on:
+      - api_gateway_service_1
+      - api_gateway_service_2 
+      - api_gateway_service_3 
+    networks:
+      - my_bridge_network
+
+networks:
+  my_bridge_network:  # 创建自定义桥接网络
+    driver: bridge  # 指定网络类型为 bridge

@@ -1,0 +1,6 @@
+{
+    "name":"SubscriptionService",
+    "service_name":"subscription_service",
+    "port":"8005",
+    "address":"0.0.0.0"
+}

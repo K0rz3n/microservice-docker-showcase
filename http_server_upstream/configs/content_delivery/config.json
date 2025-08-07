@@ -1,0 +1,41 @@
+
+{
+    "name":"ContentDeliveryService",
+    "service_name":"content_delivery_service",
+    "port":"8803",
+    "address":"0.0.0.0",
+    "target": [
+        {
+            "name":"PaymentService",
+            "port":"8003",
+            "address":"payment_service"
+        },
+        {
+            "name":"UserManagmentService",
+            "port":"8006",
+            "address":"user_managment_service"
+        },
+        {
+            "name":"SubscriptionService",
+            "port":"8005",
+            "address":"subscription_service"
+        },
+        {
+            "name":"RecommendationService",
+            "port":"8804",
+            "address":"recommendation_service"
+        },
+        {
+            "name":"RatingService",
+            "port":"8004",
+            "address":"rating_service"
+        },
+        {
+            "name":"ContentManagementService",
+            "port":"8001",
+            "address":"content_management_service"
+        }
+        
+    ]
+}
+

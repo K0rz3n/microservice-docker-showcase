@@ -1,0 +1,15 @@
+
+{
+    "name":"RecommendationService",
+    "service_name":"recommendation_service",
+    "port":"8804",
+    "address":"0.0.0.0",
+    "target": [
+        {
+            "name":"AnalyticsService",
+            "port":"8000",
+            "address":"analytics_service"
+        }
+    ]
+}
+

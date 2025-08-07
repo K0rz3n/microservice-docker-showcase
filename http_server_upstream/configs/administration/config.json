@@ -1,0 +1,31 @@
+
+{
+    "name":"AdministrationService",
+    "service_name":"administration_service",
+    "port":"8801",
+    "address":"0.0.0.0",
+    "target": [
+        {
+            "name":"ContentManagementService",
+            "port":"8001",
+            "address":"content_management_service"
+        },
+        {
+            "name":"UserManagmentService",
+            "port":"8006",
+            "address":"user_managment_service"
+        },
+        {
+            "name":"FileStorageService",
+            "port":"8002",
+            "address":"file_storage_service"
+        },
+        {
+            "name":"RefoundService",
+            "port":"8805",
+            "address":"refound_service"
+        }
+        
+    ]
+}
+
